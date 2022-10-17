@@ -16,5 +16,5 @@ type Query {
   randomQuote: Quote!
 
   #get a quote by id
-  quoteID(id: String!): Quote!
+  quoteByID(id: String!): Quote!
 }
