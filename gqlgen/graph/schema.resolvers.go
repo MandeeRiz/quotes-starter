@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"gqlgen/graph/generated"
 	"gqlgen/graph/model"
 	"io"
@@ -15,7 +16,9 @@ import (
 // RandomQuote is the resolver for the randomQuote field.
 func (r *queryResolver) RandomQuote(ctx context.Context) (*model.Quote, error) {
 	request, err := http.NewRequest("GET", "http://34.160.62.214:80/quotes", nil)
-	request.Header.Set("x-api-key", "COCKTAILSAUCE")
+	ctxVal := ctx.Value("x-api-key")
+	stringCtxVal := fmt.Sprintf("%v", ctxVal)
+	request.Header.Set("x-api-key", stringCtxVal)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +37,9 @@ func (r *queryResolver) RandomQuote(ctx context.Context) (*model.Quote, error) {
 func (r *queryResolver) QuoteByID(ctx context.Context, id string) (*model.Quote, error) {
 	URL := "http://34.160.62.214:80/quotes/" + id
 	request, err := http.NewRequest("GET", URL, nil)
-	request.Header.Set("x-api-key", "COCKTAILSAUCE")
+	ctxVal := ctx.Value("x-api-key")
+	stringCtxVal := fmt.Sprintf("%v", ctxVal)
+	request.Header.Set("x-api-key", stringCtxVal)
 	if err != nil {
 		return nil, err
 	}
@@ -50,13 +55,3 @@ func (r *queryResolver) QuoteByID(ctx context.Context, id string) (*model.Quote,
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *queryResolver) QuoteByID(ctx context.Context, id string) (*model.Quote, error) {
-
-}
