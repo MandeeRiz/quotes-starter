@@ -18,3 +18,4 @@ type Query {
   #get a quote by id
   quoteByID(id: String!): Quote!
 }
+
