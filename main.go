@@ -65,7 +65,7 @@ VALUES ($1, $2, $3)`
 		}
 		c.JSON(http.StatusCreated, returnThisUUID[0])
 		if err != nil {
-			c.IndentedJSON(http.StatusBadRequest, "message: An error occurred")
+			fmt.Println("an error occurred in POST line 68")
 			return
 		}
 		return
@@ -77,12 +77,8 @@ func deleteQuotesByID(c *gin.Context) {
 	if manageHeader(c) {
 		id := c.Param("id")
 		statement := `DELETE FROM quotes WHERE uuidkey=$1 `
-		_, err2 := dbPool.Exec(statement, id)
-		if err2 != nil {
-			log.Println(err2)
-			return
-		}
-		c.JSON(http.StatusNoContent, "message: Successfully deleted")
+		dbPool.Exec(statement, id)
+		c.JSON(http.StatusNoContent, "message: successfully deleted")
 		return
 	}
 	c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
