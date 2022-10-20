@@ -20,7 +20,7 @@ func (r *mutationResolver) CreateAQuote(ctx context.Context, input model.QuoteIn
 	quote := &model.Quote{
 		ID:     "",
 		Quote:  input.Quote,
-		Author: input.Quote,
+		Author: input.Author,
 	}
 	quoteUnMarshalled, _ := json.Marshal(quote)
 	bodyReturn := bytes.NewBuffer(quoteUnMarshalled)
