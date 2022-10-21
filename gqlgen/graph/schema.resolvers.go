@@ -87,11 +87,16 @@ func (r *queryResolver) RandomQuote(ctx context.Context) (*model.Quote, error) {
 	}
 	client := &http.Client{}
 	response, _ := client.Do(request)
+	var quote model.Quote
+	if response.StatusCode == 401 {
+		err = errors.New(response.Status)
+		return &quote, err
+	}
 	data, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
-	var quote model.Quote
+	// var quote model.Quote
 	json.Unmarshal(data, &quote)
 	return &quote, err
 }
@@ -108,10 +113,13 @@ func (r *queryResolver) QuoteByID(ctx context.Context, id string) (*model.Quote,
 	}
 	client := &http.Client{}
 	response, _ := client.Do(request)
-	data, err := io.ReadAll(response.Body)
 	var quote model.Quote
+	if response.StatusCode == 401 {
+		err = errors.New(response.Status)
+		return &quote, err
+	}
+	data, err := io.ReadAll(response.Body)
 	json.Unmarshal(data, &quote)
-
 	if response.StatusCode == 404 {
 		err = errors.New(response.Status)
 		return &quote, err
