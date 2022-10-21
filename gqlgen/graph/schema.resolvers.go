@@ -64,9 +64,12 @@ func (r *mutationResolver) DeleteAquote(ctx context.Context, id string) (*string
 		status := "401: Unauthorized (incorrect headers)"
 		return &status, err
 	}
+	if response.StatusCode == 404 {
+		status := "404: Not Found (id not found)"
+		return &status, err
+	}
 	if response.StatusCode == 204 {
-		status := "204: No Content"
-		fmt.Println("204")
+		status := "204: No Content (delete successful)"
 		return &status, err
 	}
 	dataArray := response.Status

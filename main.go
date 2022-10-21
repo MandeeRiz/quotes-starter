@@ -75,11 +75,24 @@ VALUES ($1, $2, $3)`
 
 func deleteQuotesByID(c *gin.Context) {
 	if manageHeader(c) {
+		// get the quote and determine if it exists
 		id := c.Param("id")
-		statement := `DELETE FROM quotes WHERE uuidkey=$1 `
-		dbPool.Exec(statement, id)
-		c.JSON(http.StatusNoContent, "message: successfully deleted")
-		return
+		row := dbPool.QueryRow(fmt.Sprintf("select uuidkey, quote, author from quotes where uuidkey = '%s'", id))
+		q := &quote{}
+		switch err := row.Scan(&q.ID, &q.Quote, &q.Author); err {
+		case sql.ErrNoRows:
+			c.JSON(http.StatusNotFound, "message: ID does not exist")
+			return
+		case nil:
+			//delete the quote
+			statement := fmt.Sprintf("DELETE FROM quotes WHERE uuidkey='%s';", id)
+			dbPool.Exec(statement)
+			c.JSON(http.StatusNoContent, "message: successfully deleted")
+			return
+		default:
+			c.JSON(http.StatusNotFound, "message: Something went wrong")
+			return
+		}
 	}
 	c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 }
