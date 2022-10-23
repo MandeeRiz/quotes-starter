@@ -7,3 +7,8 @@ type Quote struct {
 	Quote  string `json:"quote"`
 	Author string `json:"author"`
 }
+
+type QuoteInput struct {
+	Quote  string `json:"quote"`
+	Author string `json:"author"`
+}

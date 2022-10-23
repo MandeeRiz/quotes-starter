@@ -10,6 +10,10 @@ type Quote {
   author: String!
 }
 
+input QuoteInput {
+  quote: String!
+  author: String!
+}
 
 type Query {
   #get a random quote
@@ -18,3 +22,9 @@ type Query {
   #get a quote by id
   quoteByID(id: String!): Quote!
 }
+
+type Mutation {
+  createAQuote(input: QuoteInput!): Quote!
+  deleteAquote(id: String!): String
+}
+
