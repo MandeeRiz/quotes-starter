@@ -37,7 +37,7 @@ func (r *mutationResolver) CreateAQuote(ctx context.Context, input model.QuoteIn
 		quote.ID = ""
 		quote.Quote = ""
 		quote.Author = ""
-		err = errors.New(response.Status)
+		err = errors.New(response.Status + "insufficent characters")
 		return quote, err
 	}
 	data, err := io.ReadAll(response.Body)
@@ -121,7 +121,7 @@ func (r *queryResolver) QuoteByID(ctx context.Context, id string) (*model.Quote,
 	data, err := io.ReadAll(response.Body)
 	json.Unmarshal(data, &quote)
 	if response.StatusCode == 404 {
-		err = errors.New(response.Status)
+		err = errors.New(response.Status + "(id not found)")
 		return &quote, err
 	}
 	return &quote, err
